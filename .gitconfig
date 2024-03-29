@@ -1,0 +1,47 @@
+[alias]
+  # いい感じのグラフでログを表示
+  graph = log --graph --date=short --decorate=short --pretty=format:'%Cgreen%h %Creset%cd %Cblue%cn %Cred%d %Creset%s'
+  # 上の省略形
+  gr = log --graph --date=short --decorate=short --pretty=format:'%Cgreen%h %Creset%cd %Cblue%cn %Cred%d %Creset%s'
+  lg = log --graph --pretty=format:'%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr) %C(bold blue)<%an>%Creset' --abbrev-commit --date=relative
+  lga = log --graph --all --pretty=format:'%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr) %C(bold blue)<%an>%Creset' --abbrev-commit --date=relative
+  st = status
+  cm = commit
+  br = branch
+  co = checkout
+  cloner = clone --recursive
+  # Untracked filesを表示せず，not stagedと，stagedだけの状態を出力する
+  stt = status -uno
+  # 行ごとの差分じゃなくて，単語レベルでの差分を色付きで表示する
+  difff = diff --word-diff
+  diffc = diff --cached
+  diffcsv = diff --color --word-diff-regex="[^,]+"
+  cme = commit --allow-empty
+  pc = push -u origin HEAD
+  sw = switch
+  res = restore
+  # use hub command
+  # see = browse
+  # pr = !hub pull-request
+  # mkpr = !"f() { git commit --allow-empty -m \"$1\" && git push -u origin HEAD && hub pull-request; }; f"
+[color]
+  ui = true
+[url "git@github.com:"]
+  pushinsteadof = https://github.com/
+[user]
+  name = m-shimao
+  email = shimao.ma@gmail.com
+[core]
+  editor = vim
+  pager = nkf -w | LESSCHARSET=utf-8 less
+# [commit]
+  # template = ~/.commit_template
+[merge]
+  ff = false
+[pull]
+  ff = only
+# [filter "lfs"]
+#   required = true
+#   clean = git-lfs clean -- %f
+#   smudge = git-lfs smudge -- %f
+#   process = git-lfs filter-process
