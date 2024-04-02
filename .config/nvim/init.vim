@@ -82,3 +82,5 @@ let g:unite_source_grep_recursive_opt = ''
 " インデント色付け
 let g:indent_guides_enable_on_vim_startup = 1
 
+" fzf
+set rtp+=/opt/homebrew/opt/fzf

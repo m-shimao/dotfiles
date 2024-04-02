@@ -1,13 +1,23 @@
 autoload -Uz colors && colors
 
-# 過去に実行したコマンドを選択。
-function peco-select-history() {
-    =$(\history -n -r 1 | peco --query "$LBUFFER")
-  CURSOR=$#BUFFER
-  zle clear-screen
+# # peco: 過去に実行したコマンドを選択
+# function peco-select-history() {
+#     =$(\history -n -r 1 | peco --query "$LBUFFER")
+#   CURSOR=$#BUFFER
+#   zle clear-screen
+# }
+# zle -N peco-select-history
+# bindkey '^r' peco-select-history
+
+# fzf: 過去に実行したコマンドを選択
+incremental_search_history() {
+  selected=`history -E 1 | fzf | cut -b 26-`
+  BUFFER=`[ ${#selected} -gt 0 ] && echo $selected || echo $BUFFER`
+  CURSOR=${#BUFFER}
+  zle redisplay
 }
-zle -N peco-select-history
-bindkey '^r' peco-select-history
+zle -N incremental_search_history
+bindkey "^r" incremental_search_history
 
 . /opt/homebrew/opt/asdf/libexec/asdf.sh
 
@@ -65,7 +75,9 @@ cdf() {
 }
 
 # 初期設定
+eval "$(fzf --zsh)"
 eval "$(zoxide init zsh)"
+eval "$(direnv hook zsh)"
 
 if type brew &>/dev/null; then
   FPATH=$(brew --prefix)/share/zsh-completions:$FPATH
