@@ -1,4 +1,6 @@
 autoload -Uz colors && colors
+bindkey  "^[[H"   beginning-of-line
+bindkey  "^[[F"   end-of-line
 
 # # peco: 過去に実行したコマンドを選択
 # function peco-select-history() {
@@ -18,8 +20,6 @@ incremental_search_history() {
 }
 zle -N incremental_search_history
 bindkey "^r" incremental_search_history
-
-. /opt/homebrew/opt/asdf/libexec/asdf.sh
 
 # zsh
 ## no match found 対策
@@ -49,7 +49,9 @@ alias md='vim ./*.md'
 alias f='open .'
 alias vim='nvim'
 alias vi='nvim'
-
+alias k='kubectl'
+alias kx="kubectx"
+alias grep="grep --color=auto"
 
 ## ツール置き換え
 alias cat='bat -p'
@@ -61,7 +63,7 @@ alias tree='eza -T --git-ignore'
 alias diff='delta'
 
 ## マージ済みローカルブランチの削除
-alias git-delete-merged-local-branch="git branch --merged|xargs git branch -d"
+alias git-delete-merged-local-branch="git branch --merged|grep -v '*'|grep -v master|grep -v main|xargs git branch -d"
 
 # 関数
 ## Finderで開いているディレクトリへ移動
@@ -79,10 +81,35 @@ eval "$(fzf --zsh)"
 eval "$(zoxide init zsh)"
 eval "$(direnv hook zsh)"
 
+typeset -U path PATH
+path=(
+  /opt/homebrew/bin(N-/)
+  /opt/homebrew/sbin(N-/)
+  /usr/bin
+  /usr/sbin
+  /bin
+  /sbin
+  /usr/local/bin(N-/)
+  /usr/local/sbin(N-/)
+  /Library/Apple/usr/bin
+)
 if type brew &>/dev/null; then
   FPATH=$(brew --prefix)/share/zsh-completions:$FPATH
   source $(brew --prefix)/share/zsh-autosuggestions/zsh-autosuggestions.zsh
   autoload -Uz compinit && compinit
 fi
 
+export PATH=$PATH:$GOPATH/bin
+
 PROMPT="%F{green}%n%f %F{cyan}($(arch))%f:%F{blue}%~%f"$'\n'"%# "
+# source "/opt/homebrew/opt/kube-ps1/share/kube-ps1.sh"
+# PROMPT='$(kube_ps1)'$PROMPT
+# export PATH="${KREW_ROOT:-$HOME/.krew}/bin:$PATH"
+
+export GOPATH=$HOME/go
+export GOBIN=$GOPATH/bin
+export PATH=$PATH:$GOBIN
+. /opt/homebrew/opt/asdf/libexec/asdf.sh
+[[ kubectl ]] && source <(kubectl completion zsh)
+
+export KUBECONFIG=${HOME}/.kube/config
